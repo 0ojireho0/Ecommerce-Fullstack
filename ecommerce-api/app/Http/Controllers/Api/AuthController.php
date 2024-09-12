@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 
 // Request Helpers
 use Illuminate\Http\Request;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\SignUpRequest;
 
 //Model
 use App\Models\User;
