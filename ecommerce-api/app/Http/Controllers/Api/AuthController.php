@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 // Request Helpers
 use Illuminate\Http\Request;
+
 
 //Model
 use App\Models\User;
 
 // Auth
 use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -27,7 +30,7 @@ class AuthController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
         ]);
 
         return 'Success';
@@ -38,16 +41,15 @@ class AuthController extends Controller
 
     }
 
-    public function login(LoginRequest $request){
-        $cred = $request->validated();
+    public function login(Request $request){
+        $creds = $request->only('email', 'password');
 
-        if(!Auth::attempt($cred)){
-            return response(['message' => 'Provided email address or password is incorrect']);
-        }
+        if(Auth::attempt($creds)){
+            return Auth::user();
+        };
 
-        $user = Auth::user();
-        $token = $user->createToken('main')->plainTextToken;
-        return response(json(['user'=>$user, 'token'=>$token]));
+        return "Failed Logged In";
+        // return $creds;
     }
 
     public function logout(Request $request){

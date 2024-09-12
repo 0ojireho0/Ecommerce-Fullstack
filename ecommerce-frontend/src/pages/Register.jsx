@@ -1,11 +1,15 @@
 // Hooks
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 
 // Design
 import { Card, CardBody, Typography, Button, Input } from '@material-tailwind/react'
+import toast, {Toaster} from 'react-hot-toast'
 
 // Fetching
 import axios from 'axios'
+
 
 
 
@@ -14,6 +18,11 @@ const Register = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+
+  const sleep = () =>{
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   const handleSubmit = async(e) =>{
     e.preventDefault();
@@ -23,14 +32,17 @@ const Register = () => {
       email,
       password
     }
-
-    // console.log(signUpData)
-    // console.log(name)
-    // console.log(email)
-    // console.log(password)
-    
-    const res = await axios.post('http://127.0.0.1:8000/api/signup', signUpData)
-    console.log(res)
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_LOCAL_API_URL}/signup`, signUpData)
+      console.log(res?.data)
+      if(res.data === "Success"){
+        toast.success('Sign Up Successfully')
+      }
+    } catch (error) {
+      if(error.status === 422){
+        toast.error('Minimum of 6 letters in password')
+      }
+    }
 
   
   }
@@ -39,6 +51,7 @@ const Register = () => {
   return (
     <>
       <Card shadow={false} className='flex flex-col justify-center items-center mt-5'>
+        <Toaster />
         <Typography variant='h3' color='black'>Sign Up</Typography>
         <CardBody>
           <form onSubmit={handleSubmit}>

@@ -1,18 +1,52 @@
-import React from 'react'
+// Hooks
+import React, { useState } from 'react'
+
+// Design
 import { Card, CardBody, Typography, Button, Input } from '@material-tailwind/react'
+
+// Fetching
+import axios from 'axios'
 
 
 const Home = () => {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleSubmit = async(e) => {
+    e.preventDefault()
+
+    // console.log(name, password)
+
+    const loginData = {
+      email, 
+      password
+    }
+    
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_LOCAL_API_URL}/login`, loginData);
+      console.log(res)
+      // console.log(loginData)
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+
   return (
     <>
       <Card shadow={false} className='flex flex-col justify-center items-center mt-5'>
         <Typography variant='h3' color='black'>Sign In</Typography>
         <CardBody>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div>
               <Typography>Email</Typography>
               <Input
                 size="lg"
+                type='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@mail.com"
                 className=" !border-t-blue-gray-200 focus:!border-t-gray-900 w-[15rem]"
                 labelProps={{
@@ -24,6 +58,9 @@ const Home = () => {
               <Typography>Password</Typography>
               <Input
                 size="lg"
+                type='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="********"
                 className=" !border-t-blue-gray-200 focus:!border-t-gray-900 w-[15rem]"
                 labelProps={{
@@ -35,7 +72,7 @@ const Home = () => {
               <a href="/register" className='text-blue-900 justify-end flex'>Don't have an Account?</a>
             </div>
             <div className='flex mt-3 justify-center items-center'>
-              <Button>Sign in</Button>
+              <Button type='submit'>Sign in</Button>
             </div>
           </form>
         </CardBody>
