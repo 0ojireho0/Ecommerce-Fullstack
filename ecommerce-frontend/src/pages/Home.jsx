@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 
 // Design
 import { Card, CardBody, Typography, Button, Input } from '@material-tailwind/react'
+import toast, {Toaster} from 'react-hot-toast'
 
 // Fetching
 import axios from 'axios'
@@ -12,6 +13,7 @@ const Home = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  
 
   const handleSubmit = async(e) => {
     e.preventDefault()
@@ -27,6 +29,9 @@ const Home = () => {
       const res = await axios.post(`${import.meta.env.VITE_LOCAL_API_URL}/login`, loginData);
       console.log(res)
       // console.log(loginData)
+      if(res.status === 200){
+        toast.success('Logged In Successfully')
+      }
     } catch (error) {
       console.log(error)
     }
@@ -37,6 +42,7 @@ const Home = () => {
   return (
     <>
       <Card shadow={false} className='flex flex-col justify-center items-center mt-5'>
+        <Toaster />
         <Typography variant='h3' color='black'>Sign In</Typography>
         <CardBody>
           <form onSubmit={handleSubmit}>

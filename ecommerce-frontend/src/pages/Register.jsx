@@ -20,8 +20,9 @@ const Register = () => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const sleep = () =>{
-    return new Promise(resolve => setTimeout(resolve, ms));
+
+  const gotoLogin = () =>{
+    navigate('/')
   }
 
   const handleSubmit = async(e) =>{
@@ -35,11 +36,12 @@ const Register = () => {
     try {
       const res = await axios.post(`${import.meta.env.VITE_LOCAL_API_URL}/signup`, signUpData)
       console.log(res?.data)
-      if(res.data === "Success"){
+      if(res?.data === "Success"){
         toast.success('Sign Up Successfully')
+        setTimeout(gotoLogin, 2000)
       }
     } catch (error) {
-      if(error.status === 422){
+      if(error?.status === 422){
         toast.error('Minimum of 6 letters in password')
       }
     }
